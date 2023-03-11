@@ -3,12 +3,13 @@ package test
 import (
 	"bytes"
 	"encoding/json"
-	"example/todo/db"
-	"example/todo/model"
-	"example/todo/route"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/shresthalucky/go-todo/db"
+	"github.com/shresthalucky/go-todo/model"
+	"github.com/shresthalucky/go-todo/route"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -30,7 +31,7 @@ func TestHealth(t *testing.T) {
 func TestCreateTodo(t *testing.T) {
 	assert := assert.New(t)
 
-	err := db.Setup("go-todo")
+	err := db.Setup("mongodb://mongodb:27017", "go-todo")
 	assert.Nil(err)
 
 	router := route.SetupRouters()

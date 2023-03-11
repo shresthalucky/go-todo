@@ -2,9 +2,10 @@ package service
 
 import (
 	"context"
-	"example/todo/db"
-	"example/todo/model"
-	"example/todo/util"
+
+	"github.com/shresthalucky/go-todo/db"
+	"github.com/shresthalucky/go-todo/model"
+	"github.com/shresthalucky/go-todo/util"
 )
 
 func getTodoCollection() db.Collection {

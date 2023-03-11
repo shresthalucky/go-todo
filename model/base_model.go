@@ -1,8 +1,9 @@
 package model
 
 import (
-	"example/todo/util"
 	"time"
+
+	"github.com/shresthalucky/go-todo/util"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

@@ -20,8 +20,8 @@ type Collection struct {
 
 var DB Database
 
-func Setup(database string) error {
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+func Setup(uri, database string) error {
+	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
 		return err
 	}

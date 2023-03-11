@@ -1,7 +1,7 @@
 package route
 
 import (
-	"example/todo/controller"
+	"github.com/shresthalucky/go-todo/controller"
 
 	"github.com/gin-gonic/gin"
 )

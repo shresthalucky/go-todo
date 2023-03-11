@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  app:
+    depends_on:
+      - mongodb
+    container_name: app
+    build:
+      context: .
+    ports:
+      - 8080:8080
+  mongodb:
+    image: mongo:4.2.8
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - todo-db:/data/db
+    env_file:
+      - .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+volumes:
+  todo-db:

@@ -3,66 +3,50 @@ package test
 import (
 	"bytes"
 	"encoding/json"
-	"example/todo/controller"
 	"example/todo/db"
 	"example/todo/model"
+	"example/todo/route"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
+func TestHealth(t *testing.T) {
+	assert := assert.New(t)
+	router := route.SetupRouters()
+
+	req, err := http.NewRequest(http.MethodGet, "/ping", nil)
+	assert.Nil(err)
+
+	rr := httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+
+	assert.Equal(http.StatusOK, rr.Code)
+	assert.Equal("ping", rr.Body.String())
+}
+
 func TestCreateTodo(t *testing.T) {
+	assert := assert.New(t)
+
 	err := db.Setup("go-todo")
-	if err != nil {
-		t.Errorf(err.Error())
-	}
+	assert.Nil(err)
+
+	router := route.SetupRouters()
 
 	todo := model.Todo{
 		Title: "test title",
 		Done:  false,
 	}
-
-	b, _ := json.Marshal(todo)
+	b, err := json.Marshal(todo)
+	assert.Nil(err)
 
 	req, err := http.NewRequest(http.MethodPost, "/todos", bytes.NewReader(b))
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	handler := http.HandlerFunc(controller.CreateTodo)
+	assert.Nil(err)
 
 	rr := httptest.NewRecorder()
-	handler.ServeHTTP(rr, req)
+	router.ServeHTTP(rr, req)
 
-	if status := rr.Code; status != http.StatusCreated {
-		t.Errorf("Wrong http response status code %d", rr.Code)
-	}
+	assert.Equal(http.StatusCreated, rr.Code)
 }
-
-// func xTestCreateTodos(t *testing.T) {
-// 	err := db.Setup("go-todo")
-
-// 	if err != nil {
-// 		t.Errorf(err.Error())
-// 	}
-
-// 	todos := []interface{}{
-// 		model.Todo{
-// 			ID:    primitive.NewObjectID(),
-// 			Title: "title123",
-// 			Done:  false,
-// 		},
-// 		model.Todo{
-// 			ID:    primitive.NewObjectID(),
-// 			Title: "title123",
-// 			Done:  false,
-// 		},
-// 	}
-
-// 	err = service.CreateTodos(todos)
-
-// 	if err != nil {
-// 		t.Errorf(err.Error())
-// 	}
-
-// }

@@ -1,8 +1,7 @@
 package helper
 
 import (
-	"encoding/json"
-	"net/http"
+	"github.com/gin-gonic/gin"
 )
 
 type Response struct {
@@ -11,22 +10,12 @@ type Response struct {
 	Test  string      `json:"test,omitempty"`
 }
 
-func SuccessResponse(w http.ResponseWriter, data interface{}) {
+func SuccessResponse(c *gin.Context, statusCode int, data interface{}) {
 	res := Response{Data: data}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-
-	json.NewEncoder(w).Encode(res)
+	c.JSON(statusCode, res)
 }
 
-func ErrorResponse(w http.ResponseWriter, statusCode int, error error) {
-	res := Response{Error: error.Error(), Data: nil}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(statusCode)
-
-	// json.NewEncoder(w).Encode(res)
-	j, _ := json.Marshal(res)
-	w.Write(j)
+func ErrorResponse(c *gin.Context, statusCode int, err error) {
+	res := Response{Error: err.Error(), Data: nil}
+	c.JSON(statusCode, res)
 }

@@ -3,14 +3,15 @@ package route
 import (
 	"example/todo/controller"
 
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 )
 
-func InitTodoRoutes(r *mux.Router) {
-	todoRouter := r.PathPrefix("/todos").Subrouter()
-
-	todoRouter.HandleFunc("/", controller.GetTodos).Methods("GET")
-	todoRouter.HandleFunc("/{id}", controller.GetTodo).Methods("GET")
-	todoRouter.HandleFunc("/", controller.CreateTodo).Methods("POST")
-	todoRouter.HandleFunc("/{id}", controller.UpdateTodo).Methods("PUT")
+func InitTodoRoutes(r *gin.Engine) {
+	tr := r.Group("/todos")
+	{
+		tr.GET("", controller.GetTodos)
+		tr.GET("/:id", controller.GetTodo)
+		tr.POST("", controller.CreateTodo)
+		tr.PUT("/:id", controller.UpdateTodo)
+	}
 }

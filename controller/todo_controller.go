@@ -6,55 +6,59 @@ import (
 	"example/todo/service"
 	"net/http"
 
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 )
 
-func CreateTodo(w http.ResponseWriter, r *http.Request) {
+func CreateTodo(c *gin.Context) {
 	var todo model.Todo
-	err := helper.DecodeRequestBody(r, &todo)
-	if err != nil {
-		helper.ErrorResponse(w, http.StatusBadRequest, err)
+	if err := c.ShouldBind(&todo); err != nil {
+		helper.ErrorResponse(c, http.StatusInternalServerError, err)
+		return
 	}
 
 	data, err := service.CreateTodo(todo)
 	if err != nil {
-		helper.ErrorResponse(w, http.StatusInternalServerError, err)
+		helper.ErrorResponse(c, http.StatusInternalServerError, err)
+		return
 	}
 
-	helper.SuccessResponse(w, data)
+	helper.SuccessResponse(c, http.StatusCreated, data)
 }
 
-func GetTodos(w http.ResponseWriter, r *http.Request) {
+func GetTodos(c *gin.Context) {
 	data, err := service.GetTodos()
 	if err != nil {
-		helper.ErrorResponse(w, http.StatusInternalServerError, err)
+		helper.ErrorResponse(c, http.StatusInternalServerError, err)
+		return
 	}
 
-	helper.SuccessResponse(w, data)
+	helper.SuccessResponse(c, http.StatusOK, data)
 }
 
-func GetTodo(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	data, err := service.GetTodoById(vars["id"])
+func GetTodo(c *gin.Context) {
+	id := c.Param("id")
+	data, err := service.GetTodoById(id)
 	if err != nil {
-		helper.ErrorResponse(w, http.StatusInternalServerError, err)
+		helper.ErrorResponse(c, http.StatusInternalServerError, err)
+		return
 	}
 
-	helper.SuccessResponse(w, data)
+	helper.SuccessResponse(c, http.StatusOK, data)
 }
 
-func UpdateTodo(w http.ResponseWriter, r *http.Request) {
+func UpdateTodo(c *gin.Context) {
 	var todo model.Todo
-	vars := mux.Vars(r)
-	err := helper.DecodeRequestBody(r, &todo)
-	if err != nil {
-		helper.ErrorResponse(w, http.StatusBadRequest, err)
+	if err := c.ShouldBind(&todo); err != nil {
+		helper.ErrorResponse(c, http.StatusInternalServerError, err)
+		return
 	}
 
-	data, err := service.UpdateTodo(vars["id"], todo)
+	id := c.Param("id")
+	data, err := service.UpdateTodo(id, todo)
 	if err != nil {
-		helper.ErrorResponse(w, http.StatusInternalServerError, err)
+		helper.ErrorResponse(c, http.StatusInternalServerError, err)
+		return
 	}
 
-	helper.SuccessResponse(w, data)
+	helper.SuccessResponse(c, http.StatusOK, data)
 }

@@ -22,6 +22,6 @@ func SetupRouters() *gin.Engine {
 func InitBrokerRoutes(r *gin.Engine) {
 	br := r.Group("/broker")
 	{
-		br.GET("", HandleRequest)
+		br.POST("", HandleRequest)
 	}
 }

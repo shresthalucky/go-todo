@@ -21,6 +21,17 @@ services:
     restart: always
     deploy:
       replicas: 1
+  logger-service:
+    depends_on:
+      - mongodb
+    container_name: logger-service
+    build:
+      context: ./logger-service
+    ports:
+      - 8082:8082
+    restart: always
+    deploy:
+      replicas: 1
   mongodb:
     image: mongo:4.2.8
     container_name: mongodb

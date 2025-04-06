@@ -12,12 +12,6 @@ type Base struct {
 	UpdatedAt *time.Time          `json:"updatedAt" bson:"updatedAt,omitempty"`
 }
 
-type Todo struct {
-	Base  `bson:",inline"`
-	Title string `json:"title" bson:"title"`
-	Done  bool   `json:"done" bson:"done"`
-}
-
 func (base *Base) Init() {
 	t := time.Now().UTC()
 	objID := primitive.NewObjectID()
@@ -27,7 +21,11 @@ func (base *Base) Init() {
 	base.UpdatedAt = &t
 }
 
-func (dest *Todo) Copy(src Todo) {
-	dest.Title = src.Title
-	dest.Done = src.Done
+type LogEntry struct {
+	Base        `bson:",inline"`
+	Level       string `json:"level" bson:"level"`
+	Message     string `json:"message" bson:"message"`
+	ServiceName string `json:"serviceName" bson:"serviceName"`
+	RequestID   string `json:"request_id,omitempty" bson:"request_id,omitempty"`
+	Error       string `json:"error,omitempty" bson:"error,omitempty"`
 }

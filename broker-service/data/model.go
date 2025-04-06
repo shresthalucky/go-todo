@@ -9,11 +9,19 @@ const (
 
 type BrokerRequest struct {
 	Action      string      `json:"action"`
-	TodoPayload TodoPayload `json:"todoPayload"`
+	TodoPayload TodoPayload `json:"todoPayload,omitempty"`
 }
 
 type TodoPayload struct {
 	Title string `json:"title"`
 	Done  bool   `json:"done"`
 	ID    string `json:"id,omitempty"`
+}
+
+type LogEntry struct {
+	Level       string `json:"level"`
+	Message     string `json:"message"`
+	ServiceName string `json:"serviceName"`
+	RequestID   string `json:"requestId,omitempty"`
+	Error       string `json:"error,omitempty"`
 }

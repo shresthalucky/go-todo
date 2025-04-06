@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  todo-caddy:
+    image: shresthalucky/todo-caddy:1.0.1
+    deploy:
+      mode: replicated
+      replicas: 1
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+  go-todo:
+    image: shresthalucky/go-todo:1.0.1
+    # ports:
+    #   - 8080:8080
+    deploy:
+      mode: replicated
+      replicas: 1
+  mongodb:
+    image: mongo:4.2.8
+    ports:
+      - 27017:27017
+    deploy:
+      mode: global
+    volumes:
+      - todo-db:/data/db
+    env_file:
+      - .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+volumes:
+  todo-db:
+  caddy-data:
+    external: true
+  caddy-config:

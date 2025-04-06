@@ -1,4 +1,4 @@
-package db
+package data
 
 import (
 	"context"
@@ -18,12 +18,10 @@ type Collection struct {
 	collection *mongo.Collection
 }
 
-var DB Database
-
-func Setup(uri, database string) error {
+func Setup(uri, database string) (*Database, error) {
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	err = client.Connect(context.TODO())
@@ -31,8 +29,7 @@ func Setup(uri, database string) error {
 		panic(err)
 	}
 
-	DB = Database{db: client.Database(database)}
-	return nil
+	return &Database{db: client.Database(database)}, nil
 }
 
 func (db *Database) GetCollection(collectionName string) Collection {

@@ -1,4 +1,4 @@
-package test
+package main
 
 import (
 	"bytes"
@@ -7,16 +7,14 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/shresthalucky/go-todo/db"
-	"github.com/shresthalucky/go-todo/model"
-	"github.com/shresthalucky/go-todo/route"
+	"github.com/shresthalucky/go-todo/todo-service/data"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestHealth(t *testing.T) {
 	assert := assert.New(t)
-	router := route.SetupRouters()
+	router := SetupRouters()
 
 	req, err := http.NewRequest(http.MethodGet, "/ping", nil)
 	assert.Nil(err)
@@ -31,12 +29,12 @@ func TestHealth(t *testing.T) {
 func TestCreateTodo(t *testing.T) {
 	assert := assert.New(t)
 
-	err := db.Setup("mongodb://mongodb:27017", "go-todo")
+	_, err := data.Setup("mongodb://mongodb:27017", "go-todo")
 	assert.Nil(err)
 
-	router := route.SetupRouters()
+	router := SetupRouters()
 
-	todo := model.Todo{
+	todo := data.Todo{
 		Title: "test title",
 		Done:  false,
 	}

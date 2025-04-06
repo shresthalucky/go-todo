@@ -1,9 +1,7 @@
-package model
+package data
 
 import (
 	"time"
-
-	"github.com/shresthalucky/go-todo/util"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -14,11 +12,22 @@ type Base struct {
 	UpdatedAt *time.Time          `json:"updated_at" bson:"updatedAt,omitempty"`
 }
 
+type Todo struct {
+	Base  `bson:",inline"`
+	Title string `json:"title" bson:"title"`
+	Done  bool   `json:"done" bson:"done"`
+}
+
 func (base *Base) Init() {
-	timestamp := util.GetCurrentUTCTime()
+	t := time.Now().UTC()
 	objID := primitive.NewObjectID()
 
 	base.ID = &objID
-	base.CreatedAt = timestamp
-	base.UpdatedAt = timestamp
+	base.CreatedAt = &t
+	base.UpdatedAt = &t
+}
+
+func (dest *Todo) Copy(src Todo) {
+	dest.Title = src.Title
+	dest.Done = src.Done
 }

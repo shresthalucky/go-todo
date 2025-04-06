@@ -1,23 +1,21 @@
-package controller
+package main
 
 import (
 	"net/http"
 
-	"github.com/shresthalucky/go-todo/helper"
-	"github.com/shresthalucky/go-todo/model"
-	"github.com/shresthalucky/go-todo/service"
-
 	"github.com/gin-gonic/gin"
+	"github.com/shresthalucky/go-todo/todo-service/data"
+	"github.com/shresthalucky/go-todo/todo-service/helper"
 )
 
 func CreateTodo(c *gin.Context) {
-	var todo model.Todo
+	var todo data.Todo
 	if err := c.ShouldBind(&todo); err != nil {
 		helper.ErrorResponse(c, http.StatusInternalServerError, err)
 		return
 	}
 
-	data, err := service.CreateTodo(todo)
+	data, err := Create(todo)
 	if err != nil {
 		helper.ErrorResponse(c, http.StatusInternalServerError, err)
 		return
@@ -27,7 +25,7 @@ func CreateTodo(c *gin.Context) {
 }
 
 func GetTodos(c *gin.Context) {
-	data, err := service.GetTodos()
+	data, err := GetAll()
 	if err != nil {
 		helper.ErrorResponse(c, http.StatusInternalServerError, err)
 		return
@@ -38,7 +36,7 @@ func GetTodos(c *gin.Context) {
 
 func GetTodo(c *gin.Context) {
 	id := c.Param("id")
-	data, err := service.GetTodoById(id)
+	data, err := GetById(id)
 	if err != nil {
 		helper.ErrorResponse(c, http.StatusInternalServerError, err)
 		return
@@ -48,14 +46,14 @@ func GetTodo(c *gin.Context) {
 }
 
 func UpdateTodo(c *gin.Context) {
-	var todo model.Todo
+	var todo data.Todo
 	if err := c.ShouldBind(&todo); err != nil {
 		helper.ErrorResponse(c, http.StatusInternalServerError, err)
 		return
 	}
 
 	id := c.Param("id")
-	data, err := service.UpdateTodo(id, todo)
+	data, err := Update(id, todo)
 	if err != nil {
 		helper.ErrorResponse(c, http.StatusInternalServerError, err)
 		return

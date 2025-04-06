@@ -1,6 +1,6 @@
-module github.com/shresthalucky/go-todo
+module github.com/shresthalucky/go-todo/todo-service
 
-go 1.18
+go 1.21.4
 
 require (
 	github.com/gin-gonic/gin v1.9.0
